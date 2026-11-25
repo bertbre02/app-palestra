@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BB Fitness · Programma</title>
+<meta name="theme-color" content="#0A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root {
+  --primary: #FF6B00; /* Arancione Neon */
+  --primary-glow: rgba(255, 107, 0, 0.4);
+  --bg: #0A0A0A;
+  --card: #161616;
+  --text: #F0F0F0;
+  --text-mut: #999999;
+  --border: #333333;
+  --s1: #FF6B00; --s2: #00E5FF; --s3: #FFD600; --s4: #00E676; --s5: #D500F9; --st: #FF1744; --mb: #78909C;
+  --onc: #000;
+  box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+:root[data-theme="light"] {
+  --bg: #F4F4F4; --card: #FFFFFF; --text: #111111; --text-mut: #666666; --border: #DDDDDD;
+  --primary-glow: rgba(255, 107, 0, 0.2); --onc: #FFF;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 16px/1.45 "Avenir Next", Avenir, "Trebuchet MS", system-ui, sans-serif; -webkit-font-smoothing: antialiased; transition: background 0.3s; }
+h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; width: 100%; }
+input:focus, textarea:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+/* Header */
+.top { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); box-shadow: 0 4px 20px var(--primary-glow); }
+.in { max-width: 720px; margin: 0 auto; padding: 12px 16px; }
+.brand { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.brand-logo { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: var(--primary); text-shadow: 0 0 10px var(--primary); border: 1px solid var(--primary); }
+.brand-text { font-size: 14px; font-weight: 800; line-height: 1.2; }
+.brand-sub { font-size: 11px; color: var(--text-mut); font-weight: 400; }
+.nav-icons { display: flex; gap: 12px; align-items: center; }
+.icon-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--text); transition: 0.2s; }
+.icon-btn:active { transform: scale(0.9); }
+.icon-btn.active { background: var(--primary); color: var(--onc); border-color: var(--primary); }
+
+main { max-width: 720px; margin: 0 auto; padding: 16px 16px 120px; position: relative; z-index: 1; }
+
+/* Watermark Logo */
+.wm { position: fixed; right: -10vw; bottom: 10vh; width: 80vw; max-width: 400px; opacity: 0.05; z-index: 0; pointer-events: none; filter: grayscale(100%) sepia(100%) hue-rotate(350deg) saturate(300%); }
+
+/* UI Elements */
+.hero { background: var(--card); border: 1.5px solid var(--primary); border-radius: 16px; padding: 16px; position: relative; overflow: hidden; box-shadow: 0 0 30px var(--primary-glow); }
+.badge { display: inline-block; font-weight: 800; font-size: 11px; padding: 3px 8px; border-radius: 99px; color: var(--onc); background: var(--c, var(--primary)); margin-right: 6px; }
+.chip { font-size: 11px; border: 1px solid var(--border); padding: 2px 8px; border-radius: 9px; color: var(--text-mut); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--primary); color: var(--onc); font-weight: 800; border-radius: 10px; padding: 10px 16px; font-size: 14px; margin-top: 10px; box-shadow: 0 0 15px var(--primary-glow); }
+.btn.o { background: transparent; color: var(--primary); border: 1px solid var(--primary); box-shadow: none; }
+.btn.sm { padding: 6px 12px; font-size: 12px; }
+
+.row { display: flex; align-items: center; gap: 10px; padding: 12px; margin-bottom: 8px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--c, var(--border)); border-radius: 10px; text-decoration: none; color: inherit; }
+.row.done { opacity: 0.5; }
+.row.done .rt { text-decoration: line-through; }
+.row.stop { background: transparent; border-style: dashed; }
+.row-info { flex: 1; }
+.rt { font-weight: 800; font-size: 14px; display: block; }
+.rd { font-size: 12px; color: var(--text-mut); font-weight: 700; width: 75px; }
+
+/* Timeline */
+.tl { list-style: none; padding: 0; margin: 0; position: relative; }
+.tl::before { content: ""; position: absolute; left: 48px; top: 10px; bottom: 10px; width: 2px; background: linear-gradient(var(--primary), transparent); opacity: 0.3; }
+.st { display: grid; grid-template-columns: 38px 12px 1fr; gap: 12px; padding: 10px 0; position: relative; }
+.tm { font-size: 11px; font-weight: 800; color: var(--text-mut); text-align: right; padding-top: 3px; font-variant-numeric: tabular-nums; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 2px solid var(--primary); margin-top: 5px; z-index: 1; }
+.st.k .dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+.st.k .tt { opacity: 0.5; text-decoration: line-through; }
+.tt { font-weight: 800; font-size: 15px; display: block; }
+.sb { font-size: 12px; color: var(--text-mut); margin-top: 2px; display: block; }
+
+/* Form e Input */
+.ex { margin-top: 8px; background: var(--bg); border-radius: 8px; padding: 10px; border: 1px solid var(--border); }
+.ld { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+.ld input { width: 80px; text-align: center; font-weight: 800; color: var(--primary); }
+.fl { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; font-size: 11px; color: var(--text-mut); align-items: center; }
+.fl button { border: 1px solid var(--border); border-radius: 9px; padding: 2px 8px; color: var(--text); }
+.fl button.on { background: var(--primary); color: var(--onc); border-color: var(--primary); }
+
+/* Edit Mode */
+.edit-controls { display: flex; gap: 6px; margin-top: 6px; justify-content: flex-end; }
+.edit-controls button { padding: 4px; background: var(--border); border-radius: 6px; color: var(--text); }
+.edit-controls button:active { background: var(--primary); color: var(--onc); }
+.add-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; border: 2px dashed var(--primary); border-radius: 10px; color: var(--primary); font-weight: 800; margin-top: 10px; background: transparent; }
+.save-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--card); border-top: 1px solid var(--border); display: flex; gap: 10px; z-index: 20; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); }
+.save-bar .btn { flex: 1; margin: 0; }
+
+/* Timer Dock */
+#dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; background: var(--card); border-top: 2px solid var(--primary); padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 20px var(--primary-glow); }
+.dock-in { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.dock-in::-webkit-scrollbar { display: none; }
+#td { font-size: 24px; font-weight: 800; color: var(--primary); min-width: 65px; font-variant-numeric: tabular-nums; }
+#tl { flex: 1 1 120px; font-size: 12px; font-weight: 700; line-height: 1.2; }
+#dock button { font-size: 11px; font-weight: 800; border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; color: var(--text); white-space: nowrap; }
+
+/* Print */
+@media print {
+  body { background: #fff !important; color: #000 !important; font-size: 12pt; }
+  .top, #dock, .nav-icons, .edit-controls, .add-btn, .save-bar, main > .nav { display: none !important; }
+  .print-page { page-break-after: always; padding: 20px; border: 2px solid #000; margin-bottom: 20px; }
+  .print-page:last-child { page-break-after: auto; }
+  .print-header { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; align-items: center; }
+  .print-logo { width: 60px; height: 60px; object-fit: contain; }
+  .print-title { font-size: 18pt; font-weight: bold; }
+  .print-sub { font-size: 10pt; color: #555; }
+  .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .print-table th, .print-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+  .print-table th { background: #eee; }
+  .print-notes { margin-top: 20px; border-top: 1px dashed #000; padding-top: 10px; height: 80px; }
+  .hero, .row, .card { border-color: #000 !important; box-shadow: none !important; background: transparent !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Watermark Logo di Sfondo -->
+<div id="wm-logo"></div>
+
+<header class="top">
+  <div class="in brand">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="brand-logo" id="logo-container">BB</div>
+      <div>
+        <div class="brand-text" id="brand-name">BB Fitness</div>
+        <div class="brand-sub" id="brand-sub">La mia palestra</div>
+      </div>
+    </div>
+    <div class="nav-icons">
+      <button class="icon-btn" id="btn-weights" title="Esercizi Generali">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 4v16M18 4v16M3 8h18M3 16h18M9 4v16M15 4v16"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-settings" title="Impostazioni">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="icon-btn" id="btn-theme" title="Tema">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+<div id="dock" class="hid"></div>
+<div id="print-container" style="display:none;"></div>
+
+<script>
+// --- DATI DI DEFAULT (La tua scheda originale) ---
+const DEFAULT_SEQ = "S1 S2 S3 M S4 S1 S2 S3 X X X S4 S1 S2 S3 X X X S4 S1 S2 S3 S5 T M".split(" ");
+const DEFAULT_RUN = {"28/11":[6,2],"03/12":[5,3],"10/12":[4,4],"17/12":[3,6]};
+const SES = {
+  S1: ["Push · spalle, petto, tricipiti", "S1", "var(--s1)"],
+  S2: ["Pull · schiena, deltoidi post., bicipiti", "S2", "var(--s2)"],
+  S3: ["Corsa a intervalli · Zona 2", "S3", "var(--s3)"],
+  S4: ["Spalle + gambe leggere", "S4", "var(--s4)"],
+  S5: ["Circuito + cardio", "S5", "var(--s5)"],
+  T: ["Test corsa · 20–25 min continui", "TEST", "var(--s3)"],
+  M: ["Riposo attivo · mobilità", "MOB", "var(--mb)"],
+  X: ["STOP · riposo obbligatorio", "STOP", "var(--st)"]
+};
+
+// Funzione per generare la struttura dati della scheda
+function getDefaultSchedule() {
+  const WD=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+  const pad=n=>String(n).padStart(2,"0");
+  const DAYS=DEFAULT_SEQ.map((k,i)=>{
+    const d=new Date(2026,10,26+i), dd=pad(d.getDate()), mm=pad(d.getMonth()+1);
+    return { i, k, key:dd+"/"+mm, id:"d-"+dd+"-"+mm, wd:WD[d.getDay()], customExercises: null };
+  });
+
+  // Template base esercizi per tipo
+  const getBaseEx = (type) => {
+    if(type==="S1") return [
+      { name: "Tapis · camminata veloce", sets: "", rest: "", desc: "", time: 5, track: false },
+      { name: "Mobilità Pre-Upper", sets: "", rest: "", desc: "Circonduzioni · Wall slide 2x10 · Dislocates", time: 7, track: false },
+      { name: "Shoulder press manubri", sets: "3x10-12", rest: "90s", desc: "", time: 9, track: true },
+      { name: "Chest press", sets: "3x10-12", rest: "90s", desc: "", time: 9, track: true },
+      { name: "Alzate laterali", sets: "3x12-15", rest: "60s", desc: "", time: 7, track: true },
+      { name: "Croci ai cavi / pectoral", sets: "3x12-15", rest: "60s", desc: "", time: 7, track: true },
+      { name: "Push-down ai cavi", sets: "3x12", rest: "60s", desc: "", time: 6, track: true },
+      { name: "Plank", sets: "3x30-40s", rest: "", desc: "", time: 4, track: false },
+      { name: "Camminata inclinata (LISS)", sets: "", rest: "", desc: "", time: 20, track: false },
+      { name: "Stretching Post-Upper", sets: "", rest: "", desc: "Petto · Dorsali · Deltoide post.", time: 10, track: false }
+    ];
+    if(type==="S2") return [
+      { name: "Tapis · camminata veloce", sets: "", rest: "", desc: "", time: 5, track: false },
+      { name: "Mobilità Pre-Upper", sets: "", rest: "", desc: "Cat-camel · Rotazioni toraciche", time: 7, track: false },
+      { name: "Lat machine presa larga", sets: "3x10-12", rest: "90s", desc: "", time: 9, track: true },
+      { name: "Pulley / rematore ai cavi", sets: "3x10-12", rest: "90s", desc: "", time: 9, track: true },
+      { name: "Reverse pec deck", sets: "3x12-15", rest: "60s", desc: "", time: 7, track: true },
+      { name: "Face pull ai cavi", sets: "3x15", rest: "60s", desc: "", time: 6, track: true },
+      { name: "Curl con manubri", sets: "3x12", rest: "60s", desc: "", time: 6, track: true },
+      { name: "Crunch", sets: "3x15", rest: "", desc: "", time: 4, track: false },
+      { name: "Camminata inclinata (LISS)", sets: "", rest: "", desc: "", time: 20, track: false },
+      { name: "Stretching Post-Upper", sets: "", rest: "", desc: "Dorsali · Deltoide post.", time: 10, track: false }
+    ];
+    if(type==="S3" || type==="T") {
+      // Trova la data corrispondente per capire se è un run o test
+      const d = DAYS.find(x => x.k === type);
+      let runDesc = "Zona 2 · tapis 1% o esterno", runTime = 20;
+      if(type==="S3" && DEFAULT_RUN[d.key]) {
+        const [n,r] = DEFAULT_RUN[d.key];
+        runDesc = `${n} × (${r} min corsa + 2 min cammino)`;
+        runTime = n * (r + 2);
+      }
+      return [
+        { name: "Tapis · camminata veloce", sets: "", rest: "", desc: "", time: 5, track: false },
+        { name: "Mobilità Pre-Lower", sets: "", rest: "", desc: "Leg swing · World's Greatest Stretch", time: 7, track: false },
+        { name: type==="T" ? "TEST · corsa lenta continua" : "Corsa a intervalli", sets: type==="T" ? "20-25 min" : "", rest: "", desc: runDesc, time: runTime, track: false, isRun: type },
+        { name: "Defaticamento · camminata", sets: "", rest: "", desc: "", time: 5, track: false },
+        { name: "Stretching Post-Lower", sets: "", rest: "", desc: "Quadricipiti · Femorali · Polpacci", time: 10, track: false }
+      ];
+    }
+    if(type==="S4") return [
+      { name: "Tapis · camminata veloce", sets: "", rest: "", desc: "", time: 5, track: false },
+      { name: "Mobilità", sets: "", rest: "", desc: "Wall slide 2x10 · Glute bridge 2x12", time: 8, track: false },
+      { name: "Alzate laterali ai cavi", sets: "4x12-15", rest: "60s", desc: "", time: 9, track: true },
+      { name: "Lento avanti con manubri", sets: "3x10", rest: "90s", desc: "", time: 8, track: true },
+      { name: "Panca inclinata con manubri", sets: "3x10", rest: "90s", desc: "", time: 8, track: true },
+      { name: "Leg press leggera", sets: "3x12-15", rest: "", desc: "Mai a cedimento", time: 7, track: true },
+      { name: "Leg curl da seduto", sets: "2x12-15", rest: "", desc: "", time: 5, track: true },
+      { name: "Dead bug / crunch ai cavi", sets: "3x12", rest: "", desc: "", time: 5, track: false },
+      { name: "Camminata inclinata (LISS)", sets: "", rest: "", desc: "", time: 20, track: false },
+      { name: "Stretching completo", sets: "", rest: "", desc: "30s per lato", time: 10, track: false }
+    ];
+    if(type==="S5") return [
+      { name: "Tapis · camminata veloce", sets: "", rest: "", desc: "", time: 5, track: false },
+      { name: "Mobilità Pre-Upper", sets: "", rest: "", desc: "Circonduzioni · 10 squat", time: 7, track: false },
+      { name: "Circuito · 2 giri leggeri", sets: "", rest: "", desc: "45s lavoro / 30s pausa", time: 15, track: false },
+      { name: "Camminata inclinata (LISS)", sets: "", rest: "", desc: "", time: 25, track: false },
+      { name: "Stretching completo", sets: "", rest: "", desc: "30s ciascuno", time: 10, track: false }
+    ];
+    if(type==="M") return [
+      { name: "Mobilità generale", sets: "", rest: "", desc: "Cat-camel · Child pose", time: 12, track: false },
+      { name: "Camminata facoltativa", sets: "", rest: "", desc: "8.000-10.000 passi", time: 0, track: false }
+    ];
+    return [];
+  };
+
+  DAYS.forEach(d => { d.exercises = getBaseEx(d.k); });
+  return DAYS;
+}
+
+// --- STATO GLOBALE E STORAGE ---
+let state = {
+  schedule: [], // I giorni
+  history: {},  // Storico kg
+  globalWeights: [], // Esercizi generali
+  settings: { theme: "dark", brand: "BB Fitness", gym: "La mia palestra", timers: [30, 60, 90, 120] }
+};
+let isEditing = false;
+let editDraft = null;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem("gt-state-v2");
+    if(s) {
+      state = JSON.parse(s);
+      // Retrocompatibilità / sicurezza
+      if(!state.settings.timers) state.settings.timers = [30, 60, 90, 120];
+      if(!state.globalWeights) state.globalWeights = [];
+      if(!state.history) state.history = {};
+    } else {
+      state.schedule = getDefaultSchedule();
+      saveState();
+    }
+  } catch(e) {
+    state.schedule = getDefaultSchedule();
+  }
+}
+function saveState() {
+  try { localStorage.setItem("gt-state-v2", JSON.stringify(state)); } catch(e) { alert("Errore salvataggio. Usa un server web (https)."); }
+}
+loadState();
+
+// --- UTILITY ---
+const app = document.getElementById("app");
+const dock = document.getElementById("dock");
+const pad = n => String(n).padStart(2, "0");
+const nf = v => String(v).replace(".", ",");
+const num = v => parseFloat(String(v || "").replace(",", "."));
+
+// --- RENDER HEADER ---
+function renderHeader() {
+  document.documentElement.setAttribute("data-theme", state.settings.theme);
+  document.getElementById("brand-name").textContent = state.settings.brand;
+  document.getElementById("brand-sub").textContent = state.settings.gym;
+  
+  // Logo: usa immagine se esiste, altrimenti testo BB
+  const logoCont = document.getElementById("logo-container");
+  if(logoCont.innerHTML === "BB") {
+    const img = new Image();
+    img.src = "logo.png";
+    img.onload = () => { logoCont.innerHTML = `<img src="logo.png" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`; logoCont.style.border = "none"; };
+  }
+  
+  // Watermark
+  document.getElementById("wm-logo").innerHTML = `<img src="logo.png" class="wm" onerror="this.outerHTML='<div class=\\'wm\\' style=\\'font-size:30vw;font-weight:900;color:var(--primary);opacity:0.05;text-align:center;line-height:1;\\'>BB</div>'">`;
+
+  // Pulsante Tema
+  document.getElementById("btn-theme").onclick = () => {
+    state.settings.theme = state.settings.theme === "dark" ? "light" : "dark";
+    saveState(); renderHeader(); if(app.innerHTML) route();
+  };
+}
+
+// --- HOME ---
+function renderHome() {
+  if(dock) dock.className = "hid";
+  const todayIdx = Math.floor((new Date() - new Date(2026, 10, 26)) / 864e5);
+  
+  let html = `
+    <div class="hero" style="margin-bottom: 20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="font-size:22px;">Il mio Programma</h2>
+        <button class="btn sm" id="btn-print" style="margin:0;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:4px;"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Stampa</button>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+        <select id="print-week" style="width:auto; padding:4px 8px; font-size:12px;">
+          <option value="1">Settimana 1 (26/11 - 02/12)</option>
+          <option value="2">Settimana 2 (03/12 - 09/12)</option>
+          <option value="3">Settimana 3 (10/12 - 16/12)</option>
+          <option value="4">Settimana 4 (17/12 - 20/12)</option>
+        </select>
+      </div>
+      <p class="mut" style="font-size:12px; margin:0;">Tocca la matita per modificare la scheda. Usa il selettore per stampare la settimana.</p>
+    </div>
+
+    <h3 class="sec">Calendario <button class="icon-btn" id="btn-edit-home" style="float:right; width:28px; height:28px; margin-top:-4px;">✏️</button></h3>
+  `;
+
+  html += state.schedule.map((d, i) => {
+    const s = SES[d.k];
+    const isDone = state.settings[`done-${d.id}`] || false;
+    const isToday = i === todayIdx;
+    return `
+      <div class="row ${d.k==="X"?"stop":""} ${isDone?"done":""}" style="--c:${s[2]}">
+        <span class="rd">${d.wd.slice(0,3)} ${d.key}</span>
+        <div class="row-info">
+          <span class="rt">${s[0]}</span>
+          <span style="font-size:11px; color:var(--text-mut);">${isToday?"Oggi":""}</span>
+        </div>
+        <span class="badge">${isDone?"✓ ":""}${s[1]}</span>
+        <a href="#day-${d.id}" class="icon-btn" style="margin-left:8px;">›</a>
+      </div>
+    `;
+  }).join("");
+
+  app.innerHTML = html;
+
+  // Eventi Home
+  document.getElementById("btn-edit-home").onclick = () => {
+    isEditing = true;
+    editDraft = JSON.parse(JSON.stringify(state.schedule));
+    renderHomeEdit();
+  };
+  
+  document.getElementById("btn-print").onclick = () => {
+    const week = document.getElementById("print-week").value;
+    generatePrint(week);
+  };
+}
+
+// --- HOME EDIT MODE ---
+function renderHomeEdit() {
+  let html = `
+    <div class="hero" style="border-color: var(--primary); margin-bottom: 20px;">
+      <h2 style="font-size:20px; margin-bottom:10px;">Modifica Calendario</h2>
+      <p class="mut" style="font-size:12px;">Cambia il tipo di seduta o le date per ogni giorno. Salva in basso.</p>
+    </div>
+    <div style="margin-bottom: 80px;">
+  `;
+  
+  editDraft.forEach((d, i) => {
+    html += `
+      <div class="row" style="flex-wrap:wrap; gap:8px; border-left-color:var(--primary);">
+        <div style="flex:1; min-width:120px;">
+          <input type="text" value="${d.key}" onchange="editDraft[${i}].key=this.value" placeholder="Data (es. 26/11)" style="font-weight:800; font-size:14px; padding:4px;">
+          <input type="text" value="${d.wd}" onchange="editDraft[${i}].wd=this.value" placeholder="Giorno" style="font-size:12px; margin-top:4px; padding:4px;">
+        </div>
+        <div style="flex:1; min-width:120px;">
+          <select onchange="editDraft[${i}].k=this.value" style="padding:4px;">
+            ${Object.keys(SES).map(k => `<option value="${k}" ${d.k===k?"selected":""}>${SES[k][0]} (${k})</option>`).join("")}
+          </select>
+        </div>
+        <div style="width:100%; display:flex; justify-content:flex-end; margin-top:4px;">
+          <a href="#edit-ex-${d.id}" class="btn o sm" style="margin:0;">Modifica Esercizi</a>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += `</div>
+    <div class="save-bar">
+      <button class="btn o" onclick="cancelEdit()">Annulla</button>
+      <button class="btn" onclick="saveScheduleEdit()">Salva Calendario</button>
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+// --- DAY VIEW ---
+function renderDay(id) {
+  const d = state.schedule.find(x => x.id === id);
+  if (!d) return renderHome();
+  
+  const s = SES[d.k];
+  const isDone = state.settings[`done-${d.id}`] || false;
+  
+  let html = `
+    <div class="nav" style="margin-bottom:16px;">
+      <a href="#home" style="color:var(--primary); font-weight:800;">← Home</a>
+      <button class="icon-btn" id="btn-edit-day">✏️</button>
+    </div>
+    <div class="dh" style="--c:${s[2]}; border-left: 4px solid ${s[2]}; padding-left:12px; margin-bottom:16px;">
+      <span class="badge">${s[1]}</span>
+      <h2 style="font-size:22px; margin-top:4px;">${d.wd} ${d.key} · ${s[0]}</h2>
+    </div>
+    <ul class="tl" style="--c:${s[2]}">
+  `;
+
+  let currentTime = 0;
+  d.exercises.forEach((ex, idx) => {
+    const exId = `${d.id}-${idx}`;
+    const kg = state.history[`${d.id}-${ex.name}`]?.kg || "";
+    const feel = state.history[`${d.id}-${ex.name}`]?.feel || "";
+    const setsDone = state.history[`${d.id}-${ex.name}`]?.setsDone;
+    
+    html += `
+      <li class="st" data-exid="${exId}">
+        <span class="tm">${ex.time ? Math.floor(currentTime/60)+":"+pad(currentTime%60) : ""}</span>
+        <span class="dot"></span>
+        <div>
+          <span class="tt">${ex.name}</span>
+          <span class="sb">${[ex.sets, ex.rest ? "rec "+ex.rest : "", ex.desc].filter(Boolean).join(" · ")}</span>
+          ${ex.track ? `
+            <div class="ex">
+              <div class="ld">
+                <input type="number" placeholder="kg" value="${kg}" onchange="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'kg', this.value)">
+                <span style="font-size:12px; font-weight:800; color:var(--primary);">${getDelta(d.id, ex.name, kg)}</span>
+              </div>
+              <div class="fl">
+                <span>Sentito:</span>
+                <button class="${feel==='L'?'on':''}" onclick="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'feel', 'L')">Leggero</button>
+                <button class="${feel==='G'?'on':''}" onclick="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'feel', 'G')">Giusto</button>
+                <button class="${feel==='P'?'on':''}" onclick="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'feel', 'P')">Pesante</button>
+              </div>
+              <div class="fl">
+                <span>Serie chiuse:</span>
+                <button class="${setsDone===true?'on':''}" onclick="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'setsDone', true)">Sì</button>
+                <button class="${setsDone===false?'on':''}" onclick="updateHistory('${d.id}', '${ex.name.replace(/'/g, "\\'")}', 'setsDone', false)">No</button>
+              </div>
+            </div>
+          ` : ""}
+          ${ex.isRun ? `<button class="btn o sm" onclick="startRunTimer('${ex.isRun}', '${d.key}')">Avvia Timer</button>` : ""}
+        </div>
+      </li>
+    `;
+    if(ex.time) currentTime += ex.time;
+  });
+
+  html += `</ul>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn ${isDone ? 'o' : ''}" onclick="toggleDone('${d.id}')">${isDone ? 'Seduta Completata ✓' : 'Segna come Completata'}</button>
+    </div>
+  `;
+
+  app.innerHTML = html;
+  document.getElementById("btn-edit-day").onclick = () => {
+    isEditing = true;
+    editDraft = JSON.parse(JSON.stringify(d.exercises));
+    renderDayEdit(d);
+  };
+}
+
+// --- DAY EDIT MODE ---
+function renderDayEdit(d) {
+  let html = `
+    <div class="nav" style="margin-bottom:16px;">
+      <a href="#day-${d.id}" style="color:var(--primary); font-weight:800;" onclick="cancelEdit()">← Annulla</a>
+      <h2 style="font-size:16px;">Modifica Esercizi</h2>
+    </div>
+    <div style="margin-bottom: 80px;">
+  `;
+
+  editDraft.forEach((ex, i) => {
+    html += `
+      <div class="card" style="border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:10px; background:var(--card);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span style="font-weight:800; color:var(--text-mut); font-size:12px;">ESERCIZIO ${i+1}</span>
+          <div class="edit-controls">
+            <button onclick="moveEx(${i}, -1)" ${i===0?'disabled':''}>↑</button>
+            <button onclick="moveEx(${i}, 1)" ${i===editDraft.length-1?'disabled':''}>↓</button>
+            <button onclick="removeEx(${i})" style="color:var(--st);">✕</button>
+          </div>
+        </div>
+        <input type="text" value="${ex.name}" onchange="editDraft[${i}].name=this.value" placeholder="Nome Esercizio / Macchinario" style="font-weight:800; margin-bottom:6px;">
+        <div style="display:flex; gap:8px; margin-bottom:6px;">
+          <input type="text" value="${ex.sets}" onchange="editDraft[${i}].sets=this.value" placeholder="Serie e Rip (es. 3x10)" style="flex:1;">
+          <input type="text" value="${ex.rest}" onchange="editDraft[${i}].rest=this.value" placeholder="Recupero (es. 90s)" style="flex:1;">
+        </div>
+        <input type="text" value="${ex.desc || ''}" onchange="editDraft[${i}].desc=this.value" placeholder="Note / Dettagli" style="margin-bottom:6px; font-size:12px;">
+        <div style="display:flex; gap:10px; align-items:center; font-size:12px; color:var(--text-mut);">
+          <label>Durata (min): <input type="number" value="${ex.time || 0}" onchange="editDraft[${i}].time=+this.value" style="width:60px;"></label>
+          <label><input type="checkbox" ${ex.track?'checked':''} onchange="editDraft[${i}].track=this.checked"> Traccia kg</label>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+    <button class="add-btn" onclick="addEx()">+ Aggiungi Esercizio</button>
+    </div>
+    <div class="save-bar">
+      <button class="btn o" onclick="cancelEdit()">Annulla</button>
+      <button class="btn" onclick="saveDayEdit('${d.id}')">Salva Esercizi</button>
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+// --- GLOBAL FUNCTIONS ---
+window.cancelEdit = () => { isEditing = false; editDraft = null; route(); };
+window.saveScheduleEdit = () => { state.schedule = editDraft; saveState(); isEditing = false; route(); };
+window.saveDayEdit = (id) => {
+  const d = state.schedule.find(x => x.id === id);
+  d.exercises = editDraft;
+  saveState(); isEditing = false; renderDay(id);
+};
+
+window.addEx = () => { editDraft.push({ name: "Nuovo Esercizio", sets: "3x10", rest: "60s", desc: "", time: 5, track: true }); renderDayEdit(state.schedule.find(x => x.id === location.hash.slice(5))); };
+window.removeEx = (i) => { if(confirm("Rimuovere questo esercizio?")) { editDraft.splice(i, 1); renderDayEdit(state.schedule.find(x => x.id === location.hash.slice(5))); } };
+window.moveEx = (i, dir) => { if(i+dir < 0 || i+dir >= editDraft.length) return; const tmp = editDraft[i]; editDraft[i] = editDraft[i+dir]; editDraft[i+dir] = tmp; renderDayEdit(state.schedule.find(x => x.id === location.hash.slice(5))); };
+
+window.toggleDone = (id) => { state.settings[`done-${id}`] = !state.settings[`done-${id}`]; saveState(); renderDay(id); };
+window.updateHistory = (dayId, exName, field, val) => {
+  const key = `${dayId}-${exName}`;
+  if(!state.history[key]) state.history[key] = { kg: "", feel: "", setsDone: null };
+  state.history[key][field] = field === 'kg' ? val : (field === 'setsDone' ? val === 'true' : val);
+  if(field === 'setsDone' && val === 'true') {
+    // Se chiude le serie, salva nel diario generale
+    const existing = state.globalWeights.find(w => w.name.toLowerCase() === exName.toLowerCase());
+    if(existing) { existing.kg = state.history[key].kg; existing.date = new Date().toLocaleDateString(); }
+    else state.globalWeights.push({ name: exName, kg: state.history[key].kg, date: new Date().toLocaleDateString() });
+    state.globalWeights.sort((a,b) => a.name.localeCompare(b.name));
+  }
+  saveState(); renderDay(dayId);
+};
+window.getDelta = (dayId, exName, currentKg) => {
+  if(!currentKg) return "";
+  const key = `${dayId}-${exName}`;
+  // Trova storico precedente
+  const prevs = Object.keys(state.history).filter(k => k.endsWith(`-${exName}`) && k !== key).map(k => ({ k, kg: num(state.history[k].kg), id: k.split('-')[0] }));
+  const past = prevs.filter(p => p.id < dayId && p.kg > 0).sort((a,b) => b.id.localeCompare(a.id));
+  if(!past.length) return "";
+  const diff = num(currentKg) - past[0].kg;
+  if(diff === 0) return "=";
+  return (diff > 0 ? "+" : "−") + nf(Math.abs(diff)) + " kg";
+};
+
+// --- TIMER ---
+let T = null, rem = 0, AC = null, Q = null;
+document.addEventListener("click", () => { try{ AC = AC || new(window.AudioContext||window.webkitAudioContext)(); AC.resume(); }catch(e){} });
+const beep = () => { try{ const o=AC.createOscillator(); o.frequency.value=880; o.connect(AC.destination); o.start(); o.stop(AC.currentTime+.35); }catch(e){} navigator.vibrate?.([200,100,300]); };
+const fmt = s => pad(Math.floor(s/60))+":"+pad(s%60);
+
+function showDock() { dock.className = ""; }
+function hideDock() { dock.className = "hid"; clearInterval(T); }
+
+window.startRunTimer = (type, key) => {
+  showDock();
+  const phases = [];
+  if(type === "T") {
+    phases.push(["Corsa", 360], ["Cammino", 60], ["Corsa", 360], ["Cammino", 60], ["Corsa", 360], ["Cammino", 60], ["Corsa finale", 240]);
+  } else {
+    // Estrai dal default o dalla scheda
+    const d = state.schedule.find(x => x.k === "S3" && x.key === key);
+    const ex = d?.exercises.find(e => e.isRun);
+    const match = ex?.desc.match(/(\d+) × \((\d+) min/);
+    if(match) {
+      const n = +match[1], r = +match[2];
+      for(let i=1; i<=n; i++) phases.push([`Corsa ${i}/${n}`, r*60], ["Cammino", 120]);
+    } else { phases.push(["Corsa", 1200]); }
+  }
+  startPhase(phases);
+};
+
+function startPhase(ph) {
+  clearInterval(T); let i = 0, end = Date.now() + ph[0][1]*1000;
+  const td = document.getElementById("td"), tl = document.getElementById("tl");
+  const updateUI = () => {
+    tl.textContent = ph[i][0] + (ph[i+1] ? " → " + ph[i+1][0] : "");
+    td.textContent = fmt(Math.max(0, Math.ceil((end - Date.now())/1000)));
+  };
+  updateUI(); beep();
+  T = setInterval(() => {
+    if(Date.now() >= end) {
+      i++;
+      if(i >= ph.length) { clearInterval(T); tl.textContent = "Finito"; td.textContent = "00:00"; return; }
+      end = Date.now() + ph[i][1]*1000; beep(); updateUI();
+    } else { updateUI(); }
+  }, 250);
+}
+
+// --- ESERCIZI GENERALI (Global Weights) ---
+function renderWeights() {
+  hideDock();
+  let html = `
+    <div class="nav" style="margin-bottom:16px;">
+      <a href="#home" style="color:var(--primary); font-weight:800;">← Home</a>
+      <h2 style="font-size:16px;">Esercizi Generali per Peso</h2>
+    </div>
+    <div class="hero" style="margin-bottom:16px; border-color:var(--border);">
+      <p class="mut" style="font-size:12px; margin:0;">Lista indipendente per tenere traccia dei tuoi massimali o carichi di riferimento. Ordinata automaticamente in ordine alfabetico.</p>
+    </div>
+    <div style="margin-bottom: 80px;">
+  `;
+
+  if(!state.globalWeights.length) {
+    html += `<p class="mut" style="text-align:center; margin-top:30px;">Nessun esercizio salvato. Completa una serie in scheda o aggiungine uno qui sotto.</p>`;
+  } else {
+    html += state.globalWeights.map((w, i) => `
+      <div class="row" style="border-left-color:var(--primary); gap:10px;">
+        <input type="text" value="${w.name}" onchange="updateWeight(${i}, 'name', this.value)" style="flex:1; font-weight:700; border:none; background:transparent; padding:0;">
+        <div style="display:flex; align-items:center; gap:4px;">
+          <input type="number" value="${w.kg}" onchange="updateWeight(${i}, 'kg', this.value)" placeholder="kg" style="width:65px; text-align:center; font-weight:800; color:var(--primary); border-color:var(--primary);">
+          <span style="font-size:12px; font-weight:800; color:var(--text-mut);">kg</span>
+        </div>
+        <button class="icon-btn" onclick="deleteWeight(${i})" style="color:var(--st); border:none; width:30px; height:30px;">✕</button>
+      </div>
+    `).join("");
+  }
+
+  html += `
+    </div>
+    <button class="add-btn" onclick="addWeight()">+ Aggiungi Esercizio</button>
+  `;
+  app.innerHTML = html;
+}
+
+window.addWeight = () => { state.globalWeights.push({ name: "Nuovo Esercizio", kg: "", date: "" }); saveState(); renderWeights(); };
+window.deleteWeight = (i) => { if(confirm("Eliminare questo record?")) { state.globalWeights.splice(i, 1); saveState(); renderWeights(); } };
+window.updateWeight = (i, field, val) => {
+  state.globalWeights[i][field] = val;
+  if(field === 'name') state.globalWeights.sort((a,b) => a.name.localeCompare(b.name));
+  saveState();
+};
+
+// --- IMPOSTAZIONI ---
+function renderSettings() {
+  hideDock();
+  let html = `
+    <div class="nav" style="margin-bottom:16px;">
+      <a href="#home" style="color:var(--primary); font-weight:800;">← Home</a>
+      <h2 style="font-size:16px;">Impostazioni</h2>
+    </div>
+    <div style="margin-bottom: 80px;">
+    
+    <div class="card" style="padding:16px; border-radius:12px; margin-bottom:16px;">
+      <h3 style="margin-bottom:10px; font-size:14px; color:var(--primary);">Brand</h3>
+      <label style="font-size:12px; color:var(--text-mut);">Nome App</label>
+      <input type="text" value="${state.settings.brand}" onchange="state.settings.brand=this.value; saveState(); renderHeader();" style="margin-bottom:10px;">
+      <label style="font-size:12px; color:var(--text-mut);">Nome Palestra / Sottotitolo</label>
+      <input type="text" value="${state.settings.gym}" onchange="state.settings.gym=this.value; saveState(); renderHeader();">
+    </div>
+
+    <div class="card" style="padding:16px; border-radius:12px; margin-bottom:16px;">
+      <h3 style="margin-bottom:10px; font-size:14px; color:var(--primary);">Timer Personalizzati</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        ${state.settings.timers.map((t, i) => `
+          <div style="display:flex; align-items:center; gap:4px;">
+            <input type="number" value="${t}" onchange="state.settings.timers[${i}]=+this.value; saveState();" style="width:60px; text-align:center;">
+            <span style="font-size:12px;">sec</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="card" style="padding:16px; border-radius:12px; margin-bottom:16px;">
+      <h3 style="margin-bottom:10px; font-size:14px; color:var(--primary);">Dati e Backup</h3>
+      <p style="font-size:12px; color:var(--text-mut); margin-bottom:10px;">Salva un file di backup per non perdere la scheda modificata e i carichi.</p>
+      <button class="btn sm" onclick="exportData()">Esporta Backup</button>
+      <label class="btn o sm" style="cursor:pointer;">Importa <input type="file" accept=".json" onchange="importData(this)" style="display:none;"></label>
+    </div>
+
+    <div class="card" style="padding:16px; border-radius:12px; margin-bottom:16px; border-color:var(--st);">
+      <h3 style="margin-bottom:10px; font-size:14px; color:var(--st);">Zona Pericolo</h3>
+      <p style="font-size:12px; color:var(--text-mut); margin-bottom:10px;">Ripristina la scheda originale (perderai tutte le modifiche e i carichi salvati).</p>
+      <button class="btn o" style="color:var(--st); border-color:var(--st);" onclick="resetAll()">Ripristina Tutto</button>
+    </div>
+
+    </div>
+  `;
+  app.innerHTML = html;
+}
+
+window.exportData = () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `BB_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+};
+window.importData = (input) => {
+  if(!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if(d.schedule && d.settings) { state = d; saveState(); location.reload(); }
+      else alert("File non valido.");
+    } catch(err) { alert("Errore lettura file."); }
+  };
+  r.readAsText(input.files[0]);
+};
+window.resetAll = () => {
+  if(confirm("Sei sicuro? Verrà ripristinata la scheda originale di Brandon e perderai tutte le modifiche.")) {
+    localStorage.removeItem("gt-state-v2");
+    location.reload();
+  }
+};
+
+// --- STAMPA (PDF) ---
+function generatePrint(week) {
+  const startIdx = (week - 1) * 7;
+  const daysToPrint = state.schedule.slice(startIdx, startIdx + 7);
+  const cont = document.getElementById("print-container");
+  
+  let html = "";
+  daysToPrint.forEach(d => {
+    const s = SES[d.k];
+    html += `
+      <div class="print-page">
+        <div class="print-header">
+          <div>
+            <div class="print-title">${state.settings.brand}</div>
+            <div class="print-sub">${state.settings.gym} · ${d.wd} ${d.key}</div>
+          </div>
+          <img src="logo.png" class="print-logo" onerror="this.style.display='none'">
+        </div>
+        <h2 style="font-size:14pt; margin-bottom:10px;">${s[0]} (${s[1]})</h2>
+        <table class="print-table">
+          <thead>
+            <tr>
+              <th style="width:40%;">Esercizio</th>
+              <th style="width:30%;">Serie / Rip / Rec</th>
+              <th style="width:15%;">Kg</th>
+              <th style="width:15%;">Fatto ✓</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    d.exercises.forEach(ex => {
+      html += `
+        <tr>
+          <td><strong>${ex.name}</strong><br><small>${ex.desc || ""}</small></td>
+          <td>${ex.sets || "-"} ${ex.rest ? "· rec "+ex.rest : ""}</td>
+          <td style="height:30px;"></td>
+          <td></td>
+        </tr>
+      `;
+    });
+    
+    html += `
+          </tbody>
+        </table>
+        <div class="print-notes">
+          <strong>Note della giornata:</strong>
+        </div>
+      </div>
+    `;
+  });
+
+  cont.innerHTML = html;
+  window.print();
+}
+
+// --- ROUTING ---
+function route() {
+  renderHeader();
+  const hash = location.hash.slice(1);
+  
+  if(hash.startsWith("day-")) { renderDay(hash.slice(4)); }
+  else if(hash === "weights") { renderWeights(); }
+  else if(hash === "settings") { renderSettings(); }
+  else { renderHome(); }
+}
+
+// --- EVENTI GLOBALI HEADER ---
+document.getElementById("btn-weights").onclick = () => { isEditing = false; location.hash = "weights"; };
+document.getElementById("btn-settings").onclick = () => { isEditing = false; location.hash = "settings"; };
+
+// --- TIMER DOCK ---
+function renderDock() {
+  const timersHtml = state.settings.timers.map(t => `<button onclick="startSimpleTimer(${t})">${t}s</button>`).join("");
+  dock.innerHTML = `
+    <div class="dock-in">
+      <span id="td">00:00</span>
+      <span id="tl"></span>
+      ${timersHtml}
+      <button onclick="startSimpleTimer(0)" style="color:var(--st);">Reset</button>
+    </div>
+  `;
+}
+window.startSimpleTimer = (sec) => {
+  showDock(); clearInterval(T);
+  const td = document.getElementById("td"), tl = document.getElementById("tl");
+  if(sec === 0) { td.textContent = "00:00"; tl.textContent = ""; hideDock(); return; }
+  rem = sec; td.textContent = fmt(rem); tl.textContent = "Timer";
+  T = setInterval(() => {
+    rem--; td.textContent = fmt(rem);
+    if(rem <= 0) { clearInterval(T); beep(); tl.textContent = "Finito!"; }
+  }, 1000);
+};
+
+// Init
+renderHeader();
+route();
+addEventListener("hashchange", route);
+</script>
+</body>
+</html>
